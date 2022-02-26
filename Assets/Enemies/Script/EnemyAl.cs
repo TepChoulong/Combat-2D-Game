@@ -14,7 +14,7 @@ public class EnemyAl : MonoBehaviour
     public Transform Attackpoint;
     public int enemy_attack_damage = 15;
     //Attacking Time System
-    public float attackRate = 2f;
+    public float attackRate;
     float nextAttackTime = 0f;
 
     //Following System
@@ -35,7 +35,6 @@ public class EnemyAl : MonoBehaviour
     {
         float distToPlayer = Vector2.Distance(transform.position, Target.position);
 
-        Debug.Log(distToPlayer);
         Debug.Log("This is animation float test " + Mathf.Abs(rb2d.velocity.x));
 
         if (distToPlayer < argoRange)
@@ -59,12 +58,16 @@ public class EnemyAl : MonoBehaviour
 
     void FollowingTarget()
     {   
-        //Play Waliking Animation
+        
+        
 
         if (transform.position.x < Target.position.x)
         {
             //enmey is to the left side of the player, so move right
             rb2d.velocity = new Vector2(Following_Speed * Time.deltaTime, 0);
+
+            //Play Waliking Animation
+            animator.SetFloat("Velocity", Mathf.Abs(rb2d.velocity.x));
 
             //Not Flip Enemy
             transform.localScale = new Vector2(1,1);
@@ -75,6 +78,9 @@ public class EnemyAl : MonoBehaviour
             //enmey is to the right side of the player, so move left
             rb2d.velocity = new Vector2(-Following_Speed * Time.deltaTime, 0);
 
+            //Play Waliking Animation
+            animator.SetFloat("Velocity", Mathf.Abs(rb2d.velocity.x));
+
             //Flip Enemy
             transform.localScale = new Vector2(-1,1);
         }
@@ -83,6 +89,7 @@ public class EnemyAl : MonoBehaviour
     void NotFollowingTarget()
     {
         rb2d.velocity = new Vector2(0, 0);
+        animator.SetFloat("Velocity", 0f);
     }
 
     void Attack()
@@ -100,6 +107,7 @@ public class EnemyAl : MonoBehaviour
 
             PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
             playerHealth.TakeDamage(enemy_attack_damage);
+
         }
     }
 

@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    Animator animator;
+
     public int max_health = 100;
     int current_health = 0;
 
     void Start()
     {
         current_health = max_health;
+        animator = GetComponent<Animator>();
     }
 
     private void Update() 
@@ -25,9 +28,8 @@ public class PlayerHealth : MonoBehaviour
         //Play sound
 
         //Play Death Animation
-
-        //Play Particle effect
-
+        animator.SetBool("IsDeath", true);
+        
         //Disable the controller scritp and box collider
         PlayerController playerController = FindObjectOfType<PlayerController>();
         playerController.enabled = false;
@@ -37,5 +39,6 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(int damage)
     {
         current_health -= damage;
+        animator.SetTrigger("IsHurt");
     }
 }

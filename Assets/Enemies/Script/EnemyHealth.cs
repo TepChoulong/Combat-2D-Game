@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    Animator animator;
+
     public int max_health = 100;
     int current_health = 0;
 
     void Start()
     {
         current_health = max_health;
+        animator = GetComponent<Animator>();
     }
 
     private void Update() 
@@ -25,17 +28,18 @@ public class EnemyHealth : MonoBehaviour
         //Play sound
         
         //Play Death Animationo of enemy
-
-        //play Particle Effect
+        animator.SetBool("IsDeath", true);
 
         //Disable the EnemyAI script and box collider
         EnemyAl enemyAl = FindObjectOfType<EnemyAl>();
-        enemyAl.GetComponent<BoxCollider2D>().enabled = false;
         enemyAl.enabled = false;
+
+        Destroy(this.gameObject, 1f);
     }
 
     public void TakeDamage(int damage)
     {
         current_health -= damage;
+        animator.SetTrigger("IsHurt");
     }
 }
