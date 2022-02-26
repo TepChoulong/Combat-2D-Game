@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour
     {
         rb2 = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        
     }
 
     // Update is called once per frame
@@ -54,7 +56,7 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("HorizontalMove", Mathf.Abs(h_Move));
 
         v_Move = Input.GetAxis("Vertical");
-
+        
         if (Input.GetKeyDown(KeyCode.W))
         {
             if (IsGrounded)
@@ -62,6 +64,7 @@ public class PlayerController : MonoBehaviour
                 Jump();
             }
         }
+        
         if (Time.time >= nextAttackTime)
         {
             if (Input.GetKey(KeyCode.Space))
@@ -70,24 +73,8 @@ public class PlayerController : MonoBehaviour
                 nextAttackTime = Time.time + 1f / attackRate;
             }
         }
-        
-        if (rb2.velocity.y > 0.01)
-        {
-            animator.SetBool("IsJump", true);
-            animator.SetBool("IsFall", false);
-        }
 
-        if (rb2.velocity.y < 0.01)
-        {
-            animator.SetBool("IsJump", false);
-            animator.SetBool("IsFall", true);
-        }
-
-        if (IsGrounded)
-        {
-            animator.SetBool("IsJump", false);
-            animator.SetBool("IsFall", false);
-        }
+        JumpAnimationCheck();
     }
 
     void FixedUpdate()
@@ -118,6 +105,27 @@ public class PlayerController : MonoBehaviour
         rb2.velocity = new Vector2(rb2.velocity.x, jumpspeed * Time.fixedDeltaTime);
     }
 
+    void JumpAnimationCheck()
+    {
+        if (rb2.velocity.y > 0.01)
+        {
+            animator.SetBool("IsJump", true);
+            animator.SetBool("IsFall", false);
+        }
+
+        if (rb2.velocity.y < 0.01)
+        {
+            animator.SetBool("IsJump", false);
+            animator.SetBool("IsFall", true);
+        }
+
+        if (IsGrounded)
+        {
+            animator.SetBool("IsJump", false);
+            animator.SetBool("IsFall", false);
+        }
+    }
+
     void FlipPlayer()
     {
         facingRight = !facingRight;
@@ -137,7 +145,10 @@ public class PlayerController : MonoBehaviour
         //Take Damage
         foreach (Collider2D enemies in hitenemies)
         {
-            Debug.Log("We hit" + enemies.name);
+            Debug.Log("We hit " + enemies.name);
+            
+            EnemyHealth enemyHealth = FindObjectOfType<EnemyHealth>();
+            enemyHealth.TakeDamage(15);
         }
     }
 
@@ -145,4 +156,9 @@ public class PlayerController : MonoBehaviour
     {
         IsGrounded = Physics2D.OverlapCircle(GroundCheck.position, 0.2f, Ground);
     }
+
+    private void OnDrawGizmosSelected() 
+    {
+        Gizmos.DrawWireSphere(AttackPoint.position, AttackRadius);
+    } 
 }

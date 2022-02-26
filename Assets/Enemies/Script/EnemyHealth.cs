@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class EnemyHealth : MonoBehaviour
 {
     public int max_health = 100;
     int current_health = 0;
@@ -23,15 +23,15 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         //Play sound
+        
+        //Play Death Animationo of enemy
 
-        //Play Death Animation
+        //play Particle Effect
 
-        //Play Particle effect
-
-        //Disable the controller scritp and box collider
-        PlayerController playerController = FindObjectOfType<PlayerController>();
-        playerController.enabled = false;
-        playerController.GetComponent<BoxCollider2D>().enabled = false;
+        //Disable the EnemyAI script and box collider
+        EnemyAl enemyAl = FindObjectOfType<EnemyAl>();
+        enemyAl.GetComponent<BoxCollider2D>().enabled = false;
+        enemyAl.enabled = false;
     }
 
     public void TakeDamage(int damage)
