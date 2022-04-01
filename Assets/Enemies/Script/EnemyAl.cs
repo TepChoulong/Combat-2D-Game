@@ -13,6 +13,7 @@ public class EnemyAl : MonoBehaviour
     public float AttackRadius;
     public Transform Attackpoint;
     public int enemy_attack_damage = 15;
+    bool IsAllowToAttack;
     //Attacking Time System
     public float attackRate;
     float nextAttackTime = 0f;
@@ -46,21 +47,20 @@ public class EnemyAl : MonoBehaviour
             NotFollowingTarget();
         }
 
-        if (distToPlayer >= 1)
+        if (IsAllowToAttack == true)
         {
             if (Time.time >= nextAttackTime)
             {
                 Attack();
                 nextAttackTime = Time.time + 1f / attackRate;
-            }   
-        }
+            }
+        }   
+
+        Debug.Log(IsAllowToAttack);
     }
 
     void FollowingTarget()
     {   
-        
-        
-
         if (transform.position.x < Target.position.x)
         {
             //enmey is to the left side of the player, so move right
@@ -90,12 +90,13 @@ public class EnemyAl : MonoBehaviour
     {
         rb2d.velocity = new Vector2(0, 0);
         animator.SetFloat("Velocity", 0f);
+
     }
 
     void Attack()
     {
         //Play Fight Animation
-        //animator.SetTrigger("IsAttack");
+        animator.SetTrigger("IsAttack");
 
         //Check Enemies
         Collider2D[] hitplayer = Physics2D.OverlapCircleAll(Attackpoint.position, AttackRadius, PlayerLayer);
@@ -107,8 +108,28 @@ public class EnemyAl : MonoBehaviour
 
             PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
             playerHealth.TakeDamage(enemy_attack_damage);
-
         }
+    }
+
+    void OnCollisionEnter2D(Collision2D other) 
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            IsAllowToAttack = true;
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D other) 
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            IsAllowToAttack = true;
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D other) 
+    {
+        IsAllowToAttack = false;
     }
 
     private void OnDrawGizmosSelected() 

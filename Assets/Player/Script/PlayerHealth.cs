@@ -20,20 +20,20 @@ public class PlayerHealth : MonoBehaviour
         if (current_health <= 0)
         {
             Die();
+            animator.SetBool("IsDeath", true);
         }
     }
 
     void Die()
     {
         //Play sound
-
-        //Play Death Animation
-        animator.SetBool("IsDeath", true);
         
         //Disable the controller scritp and box collider
         PlayerController playerController = FindObjectOfType<PlayerController>();
         playerController.enabled = false;
-        playerController.GetComponent<BoxCollider2D>().enabled = false;
+
+        EnemyAl enemyAl = FindObjectOfType<EnemyAl>();
+        enemyAl.enabled = false;
     }
 
     public void TakeDamage(int damage)

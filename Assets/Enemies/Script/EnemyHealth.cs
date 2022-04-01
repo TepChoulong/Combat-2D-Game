@@ -32,6 +32,8 @@ public class EnemyHealth : MonoBehaviour
 
         //Disable the EnemyAI script and box collider
         EnemyAl enemyAl = FindObjectOfType<EnemyAl>();
+        Rigidbody2D rb2d = GetComponent<Rigidbody2D>();
+        rb2d.gravityScale = 0;
         enemyAl.enabled = false;
 
         Destroy(this.gameObject, 1f);
